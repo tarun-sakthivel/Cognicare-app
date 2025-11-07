@@ -1,4 +1,5 @@
 import 'package:cognicare/Screens/Flow_exp.dart';
+import 'package:cognicare/Screens/ReportList.dart';
 import 'package:cognicare/utils/local_storage.dart' show LocalStorage;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -89,8 +90,8 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   String? token = await LocalStorage.getToken();
                   print("Home Page Token length: ${token?.length}");
-      print("Home Page Token: $token");
-      },
+                  print("Home Page Token: $token");
+                },
                 icon: Icon(Icons.info)),
           ],
         ),
@@ -111,39 +112,45 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 30,
                 ),
-                Stack(
-                  children: [
-                    Image.asset('assets/Images/Diagnose_button.png'),
-                    Positioned(
-                      left: 20,
-                      bottom: 15,
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.black,
-                        child: const Icon(
-                          Icons.arrow_outward,
-                          color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ReportList()));
+                  },
+                  child: Stack(
+                    children: [
+                      Image.asset('assets/Images/Diagnose_button.png'),
+                      Positioned(
+                        left: 20,
+                        bottom: 15,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.black,
+                          child: const Icon(
+                            Icons.arrow_outward,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    const Positioned(
-                      left: 20,
-                      top: 20,
-                      child: Text(
-                        "Reports",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      const Positioned(
+                        left: 20,
+                        top: 20,
+                        child: Text(
+                          "Reports",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                        right: 14,
-                        top: 5,
-                        child: Image.asset('assets/Images/report_icon.png',
-                            height: 80)),
-                  ],
+                      Positioned(
+                          right: 14,
+                          top: 5,
+                          child: Image.asset('assets/Images/report_icon.png',
+                              height: 80)),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 30,
@@ -201,7 +208,17 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 20,
                           fontWeight: FontWeight.w500)),
                 ),
-                Reportwidget()
+                ReportWidget(
+                  name: 'Sabari Krishnan',
+                  date: '14.08.2025',
+                  onTap: () {
+                    // Handle navigation to details or report page
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("Opening report of Sabari Krishnan")),
+                    );
+                  },
+                )
               ],
             )),
       ),
