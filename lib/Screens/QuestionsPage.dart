@@ -75,6 +75,7 @@
 //   }
 // }
 
+import 'package:cognicare/Screens/Home.dart';
 import 'package:cognicare/Screens/Video_Selection.dart' show VideoSelection;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -108,31 +109,31 @@ class _QuesPageState extends State<QuesPage> {
         questionNo: 1,
         questionText: "Age in months",
         answer: "24",
-        questionType: 0,
+        questionType: 3,
       ),
       QuestionAnswer(
         questionNo: 2,
         questionText: "Sex",
         answer: "Male",
-        questionType: 0,
+        questionType: 4,
       ),
       QuestionAnswer(
         questionNo: 3,
         questionText: "Ethnicity",
         answer: "Asian",
-        questionType: 0,
+        questionType: 5,
       ),
       QuestionAnswer(
         questionNo: 4,
         questionText: "Jaundice at birth?",
         answer: "No",
-        questionType: 0,
+        questionType: 6,
       ),
       QuestionAnswer(
         questionNo: 5,
         questionText: "Any family member with Autism Spectrum Disorder (ASD)?",
         answer: "Yes",
-        questionType: 0,
+        questionType: 6,
       ),
       QuestionAnswer(
         questionNo: 6,
@@ -206,259 +207,20 @@ class _QuesPageState extends State<QuesPage> {
       ),
     ];
 
-    // return BlocListener<QuestionsBloc, QuestionsState>(
-    //   listener: (context, state) {
-    //     // TODO: implement listener
-    //     if (state is QuestionsSubmitted) {
-    //       Navigator.pushReplacement(
-    //         context,
-    //         MaterialPageRoute(builder: (context) => const VideoSelection()),
-    //       );
-    //     }
-    //   },
-    //   child: BlocBuilder<QuestionsBloc, QuestionsState>(
-    //     builder: (context, state) {
-    //       const Color gradientEnd = Color(0xFF2563EB);
-    //       const Color gradientStart = Color(0xFF213763);
-    //       // int currentNo = 1;
-    //       if (state is QuestionsInProgress) {
-    //         // currentNo = state.currentQuestion;
-    //         return Scaffold(
-    //           resizeToAvoidBottomInset: true,
-    //           appBar: AppBar(
-    //             leading: IconButton(
-    //               icon: const Icon(Icons.arrow_back, color: Colors.white),
-    //               onPressed: () => Navigator.of(context).pop(),
-    //             ),
-    //             title: Text(
-    //               "Questionary",
-    //               style: knormalTextStyle.copyWith(
-    //                 color: Colors.white,
-    //                 fontWeight: FontWeight.w600,
-    //                 fontSize: 26,
-    //               ),
-    //             ),
-    //             centerTitle: true,
-    //             backgroundColor: gradientStart,
-    //           ),
-    //           backgroundColor: gradientStart,
-    //           body: Container(
-    //             height: double.infinity,
-    //             decoration: BoxDecoration(
-    //               gradient: LinearGradient(
-    //                 colors: [gradientStart, gradientEnd],
-    //                 begin: Alignment.topCenter,
-    //                 end: Alignment.bottomCenter,
-    //               ),
-    //             ),
-    //             child: SingleChildScrollView(
-    //               padding: EdgeInsets.only(
-    //                 left: 16,
-    //                 right: 16,
-    //                 bottom: MediaQuery.of(context).viewInsets.bottom +
-    //                     16, // pushes up when keyboard opens
-    //               ),
-    //               child: ConstrainedBox(
-    //                 constraints: BoxConstraints(
-    //                     minHeight: MediaQuery.of(context).size.height -
-    //                         kToolbarHeight -
-    //                         32), // 32 for padding
-    //                 child: IntrinsicHeight(
-    //                   child: Column(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                     crossAxisAlignment: CrossAxisAlignment.center,
-    //                     children: [
-    //                       // Your custom widget
-    //                       Questionary_widget(
-    //                         question: dummyAnswers[state.currentQuestion - 1]
-    //                             .questionText,
-    //                         no: state.currentQuestion,
-    //                         type: dummyAnswers[state.currentQuestion - 1]
-    //                             .questionType, // just example
-    //                         controller: _controller,
-    //                       ),
+    String selectedAnswer = "";
 
-    //                       // --- TEXT INPUT case ---
-    //                       if (dummyAnswers[state.currentQuestion - 1]
-    //                               .questionType ==
-    //                           0)
-    //                         ElevatedButton(
-    //                           style: ElevatedButton.styleFrom(
-    //                             minimumSize: Size(230, 50),
-    //                             maximumSize: Size(260, 50),
-    //                             backgroundColor: Colors.white,
-    //                             foregroundColor: Colors.black,
-    //                             shadowColor: Colors.black,
-    //                             shape: RoundedRectangleBorder(
-    //                               borderRadius: BorderRadius.circular(15),
-    //                             ),
-    //                           ),
-    //                           onPressed: () {
-    //                             final text = _controller.text;
-    //                             if (text.isNotEmpty) {
-    //                               context.read<QuestionsBloc>().add(
-    //                                     SaveAnswerEvent(
-    //                                       QuestionAnswer(
-    //                                         questionNo: state.currentQuestion,
-    //                                         questionText: dummyAnswers[
-    //                                                 state.currentQuestion]
-    //                                             .questionText,
-    //                                         answer: text,
-    //                                         questionType: dummyAnswers[
-    //                                                 state.currentQuestion]
-    //                                             .questionType,
-    //                                       ),
-    //                                     ),
-    //                                   );
-
-    //                               context.read<QuestionsBloc>().add(
-    //                                   GoToNextQuestionEvent(
-    //                                       state.currentQuestion + 1));
-    //                               _controller.clear();
-    //                             }
-    //                           },
-    //                           child: Text(
-    //                             "Next",
-    //                             style: knormalTextStyle.copyWith(fontSize: 20),
-    //                           ),
-    //                         )
-    //                       else if (dummyAnswers[state.currentQuestion - 1]
-    //                                   .questionType ==
-    //                               2 &&
-    //                           state.currentQuestion == 16)
-    //                         GestureDetector(
-    //                           onTap: () {
-    //                             context
-    //                                 .read<QuestionsBloc>()
-    //                                 .add(SubmitAllAnswersEvent());
-    //                           },
-    //                           child: Container(
-    //                             height: 55,
-    //                             width: 220,
-    //                             decoration: BoxDecoration(
-    //                               color: Colors.white,
-    //                               borderRadius:
-    //                                   BorderRadius.circular(40), // pill shape
-    //                               boxShadow: [
-    //                                 BoxShadow(
-    //                                   color: Colors.black.withOpacity(0.2),
-    //                                   spreadRadius: 3,
-    //                                   blurRadius: 5,
-    //                                   offset: Offset(
-    //                                       0, 3), // changes position of shadow
-    //                                 ),
-    //                               ],
-    //                             ),
-    //                             child: Row(
-    //                               mainAxisAlignment: MainAxisAlignment.end,
-    //                               children: [
-    //                                 Center(
-    //                                   child: Text(
-    //                                     "Proceed to video",
-    //                                     style: TextStyle(
-    //                                       fontSize: 16,
-    //                                       color: Colors.black,
-    //                                     ),
-    //                                   ),
-    //                                 ),
-    //                                 SizedBox(width: 10),
-    //                                 Container(
-    //                                   height: 55,
-    //                                   width: 55,
-    //                                   decoration: BoxDecoration(
-    //                                     color: Colors.black,
-    //                                     borderRadius: BorderRadius.only(
-    //                                         topRight: Radius.circular(40),
-    //                                         bottomRight: Radius.circular(40)),
-    //                                   ),
-    //                                   child: Icon(
-    //                                     Icons.arrow_forward,
-    //                                     color: Colors.white,
-    //                                   ),
-    //                                 )
-    //                               ],
-    //                             ),
-    //                           ),
-    //                         )
-    //                       // --- YES / NO case ---
-    //                       else
-    //                         Row(
-    //                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                           crossAxisAlignment: CrossAxisAlignment.center,
-    //                           children: [
-    //                             GestureDetector(
-    //                               onTap: () {
-    //                                 context.read<QuestionsBloc>().add(
-    //                                       SaveAnswerEvent(
-    //                                         QuestionAnswer(
-    //                                             questionNo:
-    //                                                 state.currentQuestion,
-    //                                             questionText: dummyAnswers[
-    //                                                     state.currentQuestion -
-    //                                                         1]
-    //                                                 .questionText,
-    //                                             answer: "Yes",
-    //                                             questionType: dummyAnswers[
-    //                                                     state.currentQuestion -
-    //                                                         1]
-    //                                                 .questionType),
-    //                                       ),
-    //                                     );
-    //                                 context.read<QuestionsBloc>().add(
-    //                                     GoToNextQuestionEvent(
-    //                                         state.currentQuestion + 1));
-    //                               },
-    //                               child: CircleAvatar(
-    //                                 radius: 36,
-    //                                 backgroundColor: Colors.white,
-    //                                 child: Image.asset(
-    //                                     'assets/Images/thumbsup.png',
-    //                                     height: 50),
-    //                               ),
-    //                             ),
-    //                             GestureDetector(
-    //                               onTap: () {
-    //                                 context.read<QuestionsBloc>().add(
-    //                                       SaveAnswerEvent(
-    //                                         QuestionAnswer(
-    //                                             questionNo:
-    //                                                 state.currentQuestion,
-    //                                             questionText: dummyAnswers[
-    //                                                     state.currentQuestion]
-    //                                                 .questionText,
-    //                                             answer: "No",
-    //                                             questionType: dummyAnswers[
-    //                                                     state.currentQuestion]
-    //                                                 .questionType),
-    //                                       ),
-    //                                     );
-    //                                 context.read<QuestionsBloc>().add(
-    //                                     GoToNextQuestionEvent(
-    //                                         state.currentQuestion + 1));
-    //                               },
-    //                               child: CircleAvatar(
-    //                                 radius: 36,
-    //                                 backgroundColor: Colors.white,
-    //                                 child: Image.asset(
-    //                                     'assets/Images/thumbsdown.png',
-    //                                     height: 50),
-    //                               ),
-    //                             )
-    //                           ],
-    //                         ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         );
     return BlocConsumer<QuestionsBloc, QuestionsState>(
       listener: (context, state) {
         if (state is QuestionsSubmitted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const VideoSelection()),
+          );
+        } else if (state is QuestionsExitState) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (Route<dynamic> route) => false,
           );
         }
       },
@@ -477,7 +239,6 @@ class _QuesPageState extends State<QuesPage> {
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 context.read<QuestionsBloc>().add(QuestionsExitEvent());
-                Navigator.of(context).pop();
               },
             ),
             title: Text(
@@ -522,6 +283,9 @@ class _QuesPageState extends State<QuesPage> {
                         no: currentQuestion.questionNo,
                         type: currentQuestion.questionType,
                         controller: _controller,
+                        onAnswerSelected: (value) {
+                          selectedAnswer = value;
+                        },
                       ),
                       const SizedBox(height: 20),
                       if (currentQuestion.questionType == 0)
@@ -616,7 +380,7 @@ class _QuesPageState extends State<QuesPage> {
                             ),
                           ),
                         )
-                      else
+                      else if (currentQuestion.questionType == 1)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -680,7 +444,106 @@ class _QuesPageState extends State<QuesPage> {
                               ),
                             ),
                           ],
-                        ),
+                        )
+                      else if (currentQuestion.questionType == 6)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                context.read<QuestionsBloc>().add(
+                                      SaveAnswerEvent(
+                                        QuestionAnswer(
+                                          questionNo:
+                                              currentQuestion.questionNo,
+                                          questionText:
+                                              currentQuestion.questionText,
+                                          answer: "yes",
+                                          questionType:
+                                              currentQuestion.questionType,
+                                        ),
+                                      ),
+                                    );
+                                context.read<QuestionsBloc>().add(
+                                    GoToNextQuestionEvent(
+                                        state.currentQuestion + 1));
+                              },
+                              child: const CircleAvatar(
+                                radius: 36,
+                                backgroundColor: Colors.white,
+                                child: Image(
+                                  image:
+                                      AssetImage('assets/Images/thumbsup.png'),
+                                  height: 50,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                context.read<QuestionsBloc>().add(
+                                      SaveAnswerEvent(
+                                        QuestionAnswer(
+                                          questionNo:
+                                              currentQuestion.questionNo,
+                                          questionText:
+                                              currentQuestion.questionText,
+                                          answer: "no",
+                                          questionType:
+                                              currentQuestion.questionType,
+                                        ),
+                                      ),
+                                    );
+                                context.read<QuestionsBloc>().add(
+                                    GoToNextQuestionEvent(
+                                        state.currentQuestion + 1));
+                              },
+                              child: const CircleAvatar(
+                                radius: 36,
+                                backgroundColor: Colors.white,
+                                child: Image(
+                                  image: AssetImage(
+                                      'assets/Images/thumbsdown.png'),
+                                  height: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (currentQuestion.questionType == 3 ||
+                          currentQuestion.questionType == 4 ||
+                          currentQuestion.questionType == 5)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(230, 50),
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (selectedAnswer.isNotEmpty) {
+                              context.read<QuestionsBloc>().add(
+                                    SaveAnswerEvent(
+                                      QuestionAnswer(
+                                        questionNo: currentQuestion.questionNo,
+                                        questionText:
+                                            currentQuestion.questionText,
+                                        answer: selectedAnswer,
+                                        questionType:
+                                            currentQuestion.questionType,
+                                      ),
+                                    ),
+                                  );
+                              context.read<QuestionsBloc>().add(
+                                  GoToNextQuestionEvent(
+                                      state.currentQuestion + 1));
+                              selectedAnswer = "";
+                            }
+                          },
+                          child: const Text("Next"),
+                        )
                     ],
                   ),
                 ),

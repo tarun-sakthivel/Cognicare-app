@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthBlocBloc(authRepo: authRepo)..add(AppStarted()),
         ),
         BlocProvider<QuestionsBloc>(
-          create: (_) => QuestionsBloc()..add(StartQuestionsEvent()),
+          create: (_) => QuestionsBloc(),
         ),
       ],
       child: MaterialApp(

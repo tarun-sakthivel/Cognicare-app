@@ -1,3 +1,4 @@
+import 'package:cognicare/Bloc/reportGen/bloc/report_gen_bloc.dart';
 import 'package:cognicare/Screens/Flow_exp.dart';
 import 'package:cognicare/Screens/ReportList.dart';
 import 'package:cognicare/utils/local_storage.dart' show LocalStorage;
@@ -114,6 +115,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
+                    context.read<ReportGenBloc>().add(
+                        ReportGenStart(userId: '64e4f4f5c2a62b001c3f4d2a'));
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => ReportList()));
                   },

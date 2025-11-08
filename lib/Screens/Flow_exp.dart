@@ -1,14 +1,40 @@
 import 'package:cognicare/Bloc/Ques/questions_bloc.dart';
-import 'package:cognicare/Bloc/VideoRec/video_rec_bloc.dart';
-import 'package:cognicare/Bloc/VideoRec/video_rec_state.dart';
 import 'package:cognicare/Screens/QuestionsPage.dart';
 import 'package:cognicare/constants/Colors.dart';
 import 'package:cognicare/constants/text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FlowExp extends StatelessWidget {
+class FlowExp extends StatefulWidget {
   const FlowExp({super.key});
+
+  @override
+  State<FlowExp> createState() => _FlowExpState();
+}
+
+class _FlowExpState extends State<FlowExp> {
+  @override
+  void initState() {
+    super.initState();
+    // Lock to portrait for this screen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Restore all orientations when leaving the screen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

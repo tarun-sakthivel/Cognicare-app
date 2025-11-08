@@ -1,5 +1,8 @@
+import 'package:cognicare/Bloc/reportGen/bloc/report_gen_bloc.dart';
+import 'package:cognicare/Screens/Report.dart';
 import 'package:cognicare/Widgets/reportWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReportList extends StatefulWidget {
   const ReportList({super.key});
@@ -19,34 +22,84 @@ class _ReportListState extends State<ReportList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Report List',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: ListView.separated(
-          itemCount: reports.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 15),
-          itemBuilder: (context, index) {
-            final report = reports[index];
-            return ReportWidget(
-              name: report['name']!,
-              date: report['date']!,
-              onTap: () {
-                // Handle navigation to details or report page
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text("Opening report of ${report['name']}")),
-                );
-              },
-            );
-          },
-        ),
-      ),
+    return BlocBuilder<ReportGenBloc, ReportGenState>(
+      builder: (context, state) {
+        if (state is FetchLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (state is FetchFailure) {
+          return Scaffold(
+            body: Center(
+              child: Text("Error: ${state.errorMessage}"),
+            ),
+          );
+        }
+        if (state is FetchSuccess) {
+          // You can handle the successful state if needed
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Report List',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+              centerTitle: true,
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ListView.separated(
+                itemCount: reports.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 15),
+                itemBuilder: (context, index) {
+                  final report = reports[index];
+                  return ReportWidget(
+                    name: report['name']!,
+                    date: report['date']!,
+                    onTap: () {
+                      // Handle navigation to details or report page
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReportDetailPage(
+                            name: report['name']!,
+                            date: report['date']!,
+                          ),
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                                Text("Opening report of ${report['name']}")),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Report List',
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold)),
+            centerTitle: true,
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Center(
+              child: Text("No reports available."),
+            ),
+          ),
+        );
+      },
     );
   }
 }

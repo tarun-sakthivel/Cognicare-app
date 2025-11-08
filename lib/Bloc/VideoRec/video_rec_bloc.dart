@@ -28,6 +28,16 @@ class VideoRecorderBloc extends Bloc<VideoRecorderEvent, VideoRecorderState> {
     on<ToggleAssetPlayback>(_onToggleAssetPlayback);
     on<UploadVideo>(_onUploadVideo);
   }
+  @override
+  Future<void> close() async {
+    try {
+      await state.cameraController?.dispose();
+      await state.assetVideoController?.dispose();
+    } catch (e) {
+      print("⚠️ Error disposing controllers: $e");
+    }
+    return super.close();
+  }
 
   Future<void> _onInitialize(
       InitializeVideoRecorder event, Emitter<VideoRecorderState> emit) async {
@@ -196,7 +206,7 @@ class VideoRecorderBloc extends Bloc<VideoRecorderEvent, VideoRecorderState> {
       //  emit(state.copyWith(videoSent: true));
       // ✅ 1. Base URL (from .env or fallback)
       final baseUrl = dotenv.env['localhost1'] ?? 'http://10.0.2.2:8000';
-      final uri = Uri.parse('http://10.126.162.52:8000/predict/combined');
+      final uri = Uri.parse('$baseUrl/predict/combined');
 
       // ✅ 2. Token retrieval
 
@@ -213,7 +223,8 @@ class VideoRecorderBloc extends Bloc<VideoRecorderEvent, VideoRecorderState> {
       // ✅ 3. Get saved answers from SharedPreferences (saved in QuestionsBloc)
       final formAnswersJson = await LocalStorage.getString('form_answers');
       print("----------------- stage 2--------------------");
-      final formAnswers = jsonDecode(formAnswersJson ?? '{}') as Map<String, dynamic>;
+      final formAnswers =
+          jsonDecode(formAnswersJson ?? '{}') as Map<String, dynamic>;
       print("----------------- stage 3---------------------");
       // ✅ 4. Prepare multipart request
       var request = http.MultipartRequest('POST', uri);
