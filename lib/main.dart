@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           create: (_) => QuestionsBloc(),
         ),
         BlocProvider<ReportGenBloc>(
-          create: (_) => ReportGenBloc(),
+          create: (_) => ReportGenBloc()..add(ReportGenStart()),
         ),
       ],
       child: MaterialApp(

@@ -1,6 +1,7 @@
 import 'package:cognicare/Bloc/reportGen/bloc/report_gen_bloc.dart';
 import 'package:cognicare/Screens/Report.dart';
 import 'package:cognicare/Widgets/reportWidget.dart';
+import 'package:cognicare/constants/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,8 +31,7 @@ class _ReportListState extends State<ReportList> {
               child: CircularProgressIndicator(),
             ),
           );
-        }
-        if (state is FetchFailure) {
+        } else if (state is FetchFailure) {
           return Scaffold(
             appBar: AppBar(
               leading: IconButton(
@@ -44,11 +44,11 @@ class _ReportListState extends State<ReportList> {
               child: Text("Error: ${state.errorMessage}"),
             ),
           );
-        }
-        if (state is FetchSuccess) {
+        } else if (state is FetchSuccess) {
           // You can handle the successful state if needed
           final reports = state.reports;
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
               title: const Text(
                 'Report List',
@@ -62,33 +62,46 @@ class _ReportListState extends State<ReportList> {
             ),
             body: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: ListView.separated(
-                itemCount: reports.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 15),
-                itemBuilder: (context, index) {
-                  final report = reports[index];
-                  final date = report.timestamp.split('T').first;
-                  final confidence =
-                      report.confidenceProbability.toStringAsFixed(2);
-
-                  return ReportWidget(
-                    name: "Report ${report.id} ",
-                    date:
-                        "Date: $date • Confidence: ${report.combinedProbability.toStringAsFixed(2)}%",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReportDetailPage(
-                            report: report, // ✅ Pass model to detail page
+              child: (reports.isEmpty)
+                  ? Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Text(
+                            "No reports found",
+                            style: knormalTextStyle.copyWith(
+                                color: Colors.grey, fontSize: 16),
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: reports.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 15),
+                      itemBuilder: (context, index) {
+                        final report = reports[index];
+                        final date = report.timestamp.split('T').first;
+                        final confidence =
+                            report.confidenceProbability.toStringAsFixed(2);
+
+                        return ReportWidget(
+                          name: "Report ${report.id} ",
+                          date:
+                              "Date: $date • Confidence: ${report.combinedProbability.toStringAsFixed(2)}%",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReportDetailPage(
+                                  report: report, // ✅ Pass model to detail page
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
             ),
           );
         }

@@ -433,14 +433,18 @@ class SignupPage extends StatelessWidget {
                           ],
                         ),
                         child: Center(
-                          child: Text(
-                            "Register",
-                            style: knormalTextStyle.copyWith(
-                              color: kwhite,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          child: state is AuthLoadingState &&
+                                  state.action == AuthAction.login
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "Register",
+                                  style: knormalTextStyle.copyWith(
+                                      color: kwhite,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
                         ),
                       ),
                     ),

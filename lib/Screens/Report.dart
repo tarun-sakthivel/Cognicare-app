@@ -49,7 +49,7 @@ class ReportDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Assessment: ",
+                    "Percent of Non-Autistic (out of 5) ",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -63,13 +63,13 @@ class ReportDetailPage extends StatelessWidget {
                         icon: Icons.assignment,
                         label: "Questionary",
                         activeCount: report.formConfidence.round(),
-                        color: Colors.red,
+                        color: Colors.blue,
                       ),
                       _buildAssessmentItem(
                         icon: Icons.visibility,
                         label: "Eye Contact",
                         activeCount: report.eyeGazePercentage.round(),
-                        color: Colors.grey,
+                        color: Colors.blue,
                       ),
                       _buildAssessmentItem(
                         icon: Icons.psychology,

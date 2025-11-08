@@ -1,5 +1,6 @@
 import 'package:cognicare/Bloc/reportGen/bloc/report_gen_bloc.dart';
 import 'package:cognicare/Screens/Flow_exp.dart';
+import 'package:cognicare/Screens/Report.dart';
 import 'package:cognicare/Screens/ReportList.dart';
 import 'package:cognicare/utils/local_storage.dart' show LocalStorage;
 import 'package:flutter/material.dart';
@@ -28,20 +29,20 @@ class _HomePageState extends State<HomePage> {
     ]);
     return BlocListener<AuthBlocBloc, AuthBlocState>(
       listener: (context, state) {
-        if (state is AuthLoadingState) {
-          // Show loading dialog
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) =>
-                const Center(child: CircularProgressIndicator()),
-          );
-        } else {
-          // Always close loader if any state other than loading
-          if (Navigator.canPop(context)) {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-        }
+        // if (state is AuthLoadingState) {
+        //   // Show loading dialog
+        //   showDialog(
+        //     context: context,
+        //     barrierDismissible: false,
+        //     builder: (context) =>
+        //         const Center(child: CircularProgressIndicator()),
+        //   );
+        // } else {
+        //   // Always close loader if any state other than loading
+        //   if (Navigator.canPop(context)) {
+        //     Navigator.of(context, rootNavigator: true).pop();
+        //   }
+        // }
 
         if (state is AuthUnauthenticatedState) {
           // Now safely navigate after closing the loader
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Logout failed. Try again!')),
           );
-      }
+        }
       },
       child: Scaffold(
         backgroundColor: kwhite,
@@ -211,23 +212,77 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Recently Added Reports',
-                      style: knormalTextStyle.copyWith(
-                          color: const Color.fromARGB(255, 98, 98, 98),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Recently Added Reports',
+                          style: knormalTextStyle.copyWith(
+                              color: const Color.fromARGB(255, 98, 98, 98),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500)),
+                      IconButton(
+                          onPressed: () {
+                            context.read<ReportGenBloc>().add(ReportGenStart());
+                          },
+                          icon: Icon(Icons.refresh))
+                    ],
+                  ),
                 ),
-                ReportWidget(
-                  name: 'Sabari Krishnan',
-                  date: '14.08.2025',
-                  onTap: () {
-                    // Handle navigation to details or report page
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Opening report of Sabari Krishnan")),
+                BlocBuilder<ReportGenBloc, ReportGenState>(
+                    builder: (context, state) {
+                  if (state is FetchLoading)
+                    return Center(child: CircularProgressIndicator());
+                  else if (state is FetchFailure)
+                    return Center(child: Text("Failed to load reports"));
+                  else if (state is FetchSuccess) {
+                    final report = state.reports;
+                    if (state.reports.isEmpty) {
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Text(
+                              "No reports found",
+                              style: knormalTextStyle.copyWith(
+                                  color: Colors.grey, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    return ReportWidget(
+                      name: "Report" + report[0].id.toString(),
+                      date: report[0].timestamp.split('T').first,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ReportDetailPage(report: report[0])));
+                        // Handle navigation to details or report page
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text("Opening report of Sabari Krishnan")),
+                        );
+                      },
                     );
-                  },
-                )
+                  }
+                  // ignore: curly_braces_in_flow_control_structures
+                  else
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Text(
+                            "No reports found",
+                            style: knormalTextStyle.copyWith(
+                                color: Colors.grey, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    );
+                }),
               ],
             )),
       ),

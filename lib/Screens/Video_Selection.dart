@@ -39,12 +39,24 @@ class _VideoSelectionState extends State<VideoSelection> {
             GestureDetector(
               onTap: () {
                 // Navigate to Video 3
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VideoRecorderPage(
+                          assetPath: "assets/VideoFile/Baby Shark.mp4"),
+                    ));
               },
               child: Image.asset("assets/Images/Shark.png"),
             ),
             GestureDetector(
               onTap: () {
                 // Navigate to Video 2
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VideoRecorderPage(
+                          assetPath: "assets/VideoFile/Wheels on the Bus.mp4"),
+                    ));
               },
               child: Image.asset("assets/Images/Coco.png"),
             ),
