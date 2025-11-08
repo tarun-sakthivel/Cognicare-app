@@ -11,12 +11,9 @@ final class ReportGenInitial extends ReportGenState {}
 
 final class FetchLoading extends ReportGenState {}
 
-final class FetchSuccess extends ReportGenState {
-  final ReportModel report;
-  const FetchSuccess({required this.report});
-
-  @override
-  List<Object?> get props => [report];
+class FetchSuccess extends ReportGenState {
+  final List<ReportModel> reports;
+  FetchSuccess(this.reports);
 }
 
 final class FetchFailure extends ReportGenState {

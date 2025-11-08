@@ -8,10 +8,8 @@ sealed class ReportGenEvent extends Equatable {
 }
 
 class ReportGenStart extends ReportGenEvent {
-  final String userId;
-
-  const ReportGenStart({required this.userId});
+  const ReportGenStart();
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [];
 }

@@ -28,26 +28,33 @@ class _HomePageState extends State<HomePage> {
     ]);
     return BlocListener<AuthBlocBloc, AuthBlocState>(
       listener: (context, state) {
-        if (state is AuthUnauthenticatedState) {
-          // Navigate to login screen after logout
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Starter()),
-              (Route<dynamic> route) => false);
-        }
-        if (state is AuthFailureState) {
-          // Show error if logout failed
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Logout failed. Try again!')),
-          );
-        }
         if (state is AuthLoadingState) {
+          // Show loading dialog
           showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (context) => Center(child: CircularProgressIndicator()),
+            builder: (context) =>
+                const Center(child: CircularProgressIndicator()),
           );
+        } else {
+          // Always close loader if any state other than loading
+          if (Navigator.canPop(context)) {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
         }
+
+        if (state is AuthUnauthenticatedState) {
+          // Now safely navigate after closing the loader
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const Starter()),
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is AuthFailureState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Logout failed. Try again!')),
+          );
+      }
       },
       child: Scaffold(
         backgroundColor: kwhite,
@@ -87,13 +94,13 @@ class _HomePageState extends State<HomePage> {
                 // Handle notification icon press
               },
             ),
-            IconButton(
-                onPressed: () async {
-                  String? token = await LocalStorage.getToken();
-                  print("Home Page Token length: ${token?.length}");
-                  print("Home Page Token: $token");
-                },
-                icon: Icon(Icons.info)),
+            // IconButton(
+            //     onPressed: () async {
+            //       String? token = await LocalStorage.getToken();
+            //       print("Home Page Token length: ${token?.length}");
+            //       print("Home Page Token: $token");
+            //     },
+            //     icon: Icon(Icons.info)),
           ],
         ),
         body: Padding(
@@ -115,8 +122,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    context.read<ReportGenBloc>().add(
-                        ReportGenStart(userId: '64e4f4f5c2a62b001c3f4d2a'));
+                    context.read<ReportGenBloc>().add(ReportGenStart());
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => ReportList()));
                   },

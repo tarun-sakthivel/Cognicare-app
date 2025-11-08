@@ -272,10 +272,10 @@ class VideoRecorderBloc extends Bloc<VideoRecorderEvent, VideoRecorderState> {
       }
       print("----------------- stage 6 entering headers---------------------");
       // ✅ 7. Headers
-      request.headers.addAll({
-        'accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      });
+        request.headers.addAll({
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        });
       print("----------------- stage 7---------------------");
       // ✅ 8. Send request
       print("Sending to: ${request.url}");

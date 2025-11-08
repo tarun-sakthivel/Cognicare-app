@@ -13,12 +13,12 @@ class ReportList extends StatefulWidget {
 
 class _ReportListState extends State<ReportList> {
   // Sample report data (you can replace with your dynamic list)
-  final List<Map<String, String>> reports = [
-    {'name': 'Sabari Krishnan', 'date': '14.08.2025'},
-    {'name': 'Tarun Sakthivel', 'date': '13.08.2025'},
-    {'name': 'Ananya Ravi', 'date': '12.08.2025'},
-    {'name': 'Dev', 'date': '11.08.2025'},
-  ];
+  // final List<Map<String, String>> reports = [
+  //   {'name': 'Sabari Krishnan', 'date': '14.08.2025'},
+  //   {'name': 'Tarun Sakthivel', 'date': '13.08.2025'},
+  //   {'name': 'Ananya Ravi', 'date': '12.08.2025'},
+  //   {'name': 'Dev', 'date': '11.08.2025'},
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +33,13 @@ class _ReportListState extends State<ReportList> {
         }
         if (state is FetchFailure) {
           return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back)),
+            ),
             body: Center(
               child: Text("Error: ${state.errorMessage}"),
             ),
@@ -40,13 +47,18 @@ class _ReportListState extends State<ReportList> {
         }
         if (state is FetchSuccess) {
           // You can handle the successful state if needed
+          final reports = state.reports;
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Report List',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold)),
+              title: const Text(
+                'Report List',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               centerTitle: true,
-              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+              backgroundColor: Colors.white,
             ),
             body: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -56,26 +68,22 @@ class _ReportListState extends State<ReportList> {
                     const SizedBox(height: 15),
                 itemBuilder: (context, index) {
                   final report = reports[index];
-                  return ReportWidget(
-                    name: report['name']!,
-                    date: report['date']!,
-                    onTap: () {
-                      // Handle navigation to details or report page
+                  final date = report.timestamp.split('T').first;
+                  final confidence =
+                      report.confidenceProbability.toStringAsFixed(2);
 
+                  return ReportWidget(
+                    name: "Report ${report.id} ",
+                    date:
+                        "Date: $date • Confidence: ${report.combinedProbability.toStringAsFixed(2)}%",
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReportDetailPage(
-                            name: report['name']!,
-                            date: report['date']!,
+                            report: report, // ✅ Pass model to detail page
                           ),
                         ),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text("Opening report of ${report['name']}")),
                       );
                     },
                   );

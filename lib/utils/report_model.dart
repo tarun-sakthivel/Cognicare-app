@@ -31,10 +31,24 @@ class ReportModel {
       confidenceProbability: (json['confidence_probability'] ?? 0).toDouble(),
       videoPrediction: json['video_prediction'] ?? '',
       videoConfidence: (json['video_confidence'] ?? 0).toDouble(),
-      formConfidence: (json['form_confidence'] ?? 0).toDouble(),
+      formConfidence: (json['form_confidence'] ?? 0).toDouble() * 100,
       eyeGazePercentage: (json['eye_gaze_percentage'] ?? 0).toDouble(),
       reportText: json['report_text'] ?? '',
       timestamp: json['timestamp'] ?? '',
     );
+  }
+  double get combinedProbability {
+    return (confidenceProbability * 0.4) +
+        (videoConfidence * 0.35) +
+        (formConfidence * 0.25);
+  }
+
+  String get riskLevel {
+    if (combinedProbability >= 80)
+      return "High";
+    else if (combinedProbability >= 60)
+      return "Moderate";
+    else
+      return "Low";
   }
 }

@@ -184,7 +184,7 @@ class _VideoRecorderPageState extends State<VideoRecorderPage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    context.read<VideoRecorderBloc>().close();
+    // context.read<VideoRecorderBloc>().close();
 
     super.dispose();
   }

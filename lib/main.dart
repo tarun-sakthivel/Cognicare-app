@@ -1,3 +1,4 @@
+import 'package:cognicare/Bloc/reportGen/bloc/report_gen_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<QuestionsBloc>(
           create: (_) => QuestionsBloc(),
+        ),
+        BlocProvider<ReportGenBloc>(
+          create: (_) => ReportGenBloc(),
         ),
       ],
       child: MaterialApp(
